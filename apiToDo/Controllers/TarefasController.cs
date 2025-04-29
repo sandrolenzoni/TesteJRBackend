@@ -39,17 +39,17 @@ namespace apiToDo.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TarefaDTO>> InserirTarefas([FromBody] TarefaDTO Request)
+        public async Task<ActionResult<List<TarefaDTO>>> InserirTarefas([FromBody] InserirTarefaDTO Request)
         {
             try
             {
+                // Testa para verificar se a descrição da tarefa está vazia, porque é impedimento. 
                 if (Request == null || string.IsNullOrEmpty(Request.DS_TAREFA))
-                    return BadRequest(new { msg = "Dados inválidos da tarefa" });
-                
+                    return BadRequest(new { msg = "A descrição da tarefa não pode ser vazia." });
 
-                return StatusCode(200);
-
-
+                // Caso não haja nenhum impedimento, envia para o serviço o DTO de Inserir Tarefa
+                List<TarefaDTO> tarefas = await _tarefaService.InserirTarefa(Request);
+                return Ok(tarefas);
             }
 
             catch (Exception ex)

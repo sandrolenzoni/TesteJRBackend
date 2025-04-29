@@ -27,11 +27,16 @@ namespace apiToDo.Models
         }
 
 
-        public async Task<List<TarefaDTO>> InserirTarefa(TarefaDTO Request)
+        public async Task<List<TarefaDTO>> InserirTarefa(String ds_tarefa)
         {
             try
             {
-                Request.ID_TAREFA = _tarefas.Max(tarefa => tarefa.ID_TAREFA) + 1;
+                // O ID é gerado pelo método Tarefa.
+                TarefaDTO Request = new TarefaDTO
+                {
+                    ID_TAREFA = _tarefas.Max(tarefa => tarefa.ID_TAREFA) + 1,
+                    DS_TAREFA = ds_tarefa
+                };
                 _tarefas.Add(Request);
                 return await Task.FromResult(_tarefas);
             }

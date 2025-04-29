@@ -8,7 +8,7 @@ namespace apiToDo.Services
     public interface ITarefasService
     {
         Task<List<TarefaDTO>> ListarTarefas();
-        Task<List<TarefaDTO>> InserirTarefa(TarefaDTO tarefa);
+        Task<List<TarefaDTO>> InserirTarefa(InserirTarefaDTO DS_TAREFA);
     }
     public class TarefasService:ITarefasService
     {
@@ -24,9 +24,10 @@ namespace apiToDo.Services
 
         }
 
-        public async Task<List<TarefaDTO>> InserirTarefa(TarefaDTO tarefa)
+        public async Task<List<TarefaDTO>> InserirTarefa(InserirTarefaDTO Request)
         {
-            List<TarefaDTO> tarefas = await _tarefas.ListarTarefas();
+            // Recebe do controller do request e envia a descrição para o Models que está controlando o banco de dados, sendo assim ele adiciona uma nova tarefa.
+            List<TarefaDTO> tarefas = await _tarefas.InserirTarefa(Request.DS_TAREFA);
             return tarefas;
 
         }
