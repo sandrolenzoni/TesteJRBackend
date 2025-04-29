@@ -28,6 +28,7 @@ namespace apiToDo.Services
         }
         public async Task<TarefaDTO> VerTarefa(int ID_TAREFA)
         {
+            // Busca a tarefa no banco de dados e retorna a tarefa ou null, caso não exista
             TarefaDTO tarefa = await _tarefas.BuscarTarefaPorId(ID_TAREFA);
             return tarefa;
 
