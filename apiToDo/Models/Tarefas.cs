@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace apiToDo.Models
 {
@@ -45,22 +46,47 @@ namespace apiToDo.Models
                 throw;
             }
         }
-        public async Task<bool> DeletarTarefa(int ID_TAREFA)
+        public async Task<bool> DeletarTarefa(TarefaDTO tarefa)
         {
             try
             {
-                // Busca a tarefa no "banco de dados" que está sendo armazenado na memória do sistema
-                TarefaDTO tarefa = _tarefas.FirstOrDefault(tarefa => tarefa.ID_TAREFA == ID_TAREFA);
-                // Se não existir a tarefa, vai retornar falso
-                if (tarefa == null)
-                    return false;
-                
+                // O sistema, que já encontrou a tarefa, apenas a deleta do sistema e retorna informando que foi deletado       
                 _tarefas.Remove(tarefa);
                 // Se existir a tarefa, o método vai retornar true
                 return await Task.FromResult(true);
 
             }
             catch(Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<char> AtualizarTarefa(TarefaDTO tarefaAtualizada)
+        {
+            int index = _tarefas.FindIndex(tarefa => tarefa.ID_TAREFA == tarefaAtualizada.ID_TAREFA);
+            if (index >=0)
+            {
+                _tarefas[index] = tarefaAtualizada;
+                return await Task.FromResult('1');
+            }
+
+            return await Task.FromResult('0');
+        }
+
+        public async Task<TarefaDTO > BuscarTarefaPorId(int ID_TAREFA)
+        {
+            try
+            {
+                // Busca a tarefa no "banco de dados" que está sendo armazenado na memória do sistema
+                TarefaDTO tarefa = _tarefas.FirstOrDefault(tarefa => tarefa.ID_TAREFA == ID_TAREFA);
+            
+
+                // Se existir a vai retorná-la, se não irá retornar null
+                return await Task.FromResult(tarefa);
+
+            }
+            catch (Exception)
             {
                 throw;
             }
