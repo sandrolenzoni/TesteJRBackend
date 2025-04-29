@@ -1,0 +1,14 @@
+# Ignore Visual Studio files
+.vs/
+.vscode/
+.idea/
+
+# Ignore build directories
+bin/
+obj/
+
+# Outros arquivos temporários
+*.user
+*.userosscache
+*.suo
+*.sln.docstates

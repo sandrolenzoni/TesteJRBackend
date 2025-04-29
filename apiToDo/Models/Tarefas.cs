@@ -1,5 +1,6 @@
 ﻿using apiToDo.DTO;
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,63 +8,56 @@ namespace apiToDo.Models
 {
     public class Tarefas
     {
-        public List<TarefaDTO> lstTarefas()
+        private static readonly List<TarefaDTO> _tarefas = new List<TarefaDTO>
+             {
+        new TarefaDTO { ID_TAREFA = 1, DS_TAREFA = "Fazer Compras" },
+        new TarefaDTO { ID_TAREFA = 2, DS_TAREFA = "Fazer Atividade da Faculdade" },
+        new TarefaDTO { ID_TAREFA = 3, DS_TAREFA = "Subir Projeto de Teste no GitHub" }
+    };
+        public async Task<List<TarefaDTO>> ListarTarefas()
         {
             try
             {
-                List<TarefaDTO> lstTarefas = new List<TarefaDTO>();
-
-                lstTarefas.Add(new TarefaDTO
-                {
-                    ID_TAREFA = 1,
-                    DS_TAREFA = "Fazer Compras"
-                });
-
-                lstTarefas.Add(new TarefaDTO
-                {
-                    ID_TAREFA = 2,
-                    DS_TAREFA = "Fazer Atividad Faculdade"
-                });
-
-                lstTarefas.Add(new TarefaDTO
-                {
-                    ID_TAREFA = 3,
-                    DS_TAREFA = "Subir Projeto de Teste no GitHub"
-                });
-
-                return new List<TarefaDTO>();
+                return await Task.FromResult(_tarefas);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
 
-        public void InserirTarefa(TarefaDTO Request)
+        public async Task<List<TarefaDTO>> InserirTarefa(TarefaDTO Request)
         {
             try
             {
-                List<TarefaDTO> lstResponse = lstTarefas();
-                lstResponse.Add(Request);
+                Request.ID_TAREFA = _tarefas.Max(tarefa => tarefa.ID_TAREFA) + 1;
+                _tarefas.Add(Request);
+                return await Task.FromResult(_tarefas);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw ex;
+                throw;
             }
         }
-        public void DeletarTarefa(int ID_TAREFA)
+        public async Task<bool> DeletarTarefa(int ID_TAREFA)
         {
             try
             {
-                List<TarefaDTO> lstResponse = lstTarefas();
-                var Tarefa = lstResponse.FirstOrDefault(x => x.ID_TAREFA == ID_TAREFA);
-                TarefaDTO Tarefa2 = lstResponse.Where(x=> x.ID_TAREFA == Tarefa.ID_TAREFA).FirstOrDefault();
-                lstResponse.Remove(Tarefa2);
+                // Busca a tarefa no "banco de dados" que está sendo armazenado na memória do sistema
+                TarefaDTO tarefa = _tarefas.FirstOrDefault(tarefa => tarefa.ID_TAREFA == ID_TAREFA);
+                // Se não existir a tarefa, vai retornar falso
+                if (tarefa == null)
+                    return false;
+                
+                _tarefas.Remove(tarefa);
+                // Se existir a tarefa, o método vai retornar true
+                return await Task.FromResult(true);
+
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }
